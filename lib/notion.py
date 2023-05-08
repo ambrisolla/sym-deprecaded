@@ -18,7 +18,6 @@ class Notion:
             items   = []
 
             for result in data:
-                
                 __notion_id = result['id']
                 __name      = result['properties']['name']['title'][0]['plain_text']
                 __category  = result['properties']['category']['select']['name']

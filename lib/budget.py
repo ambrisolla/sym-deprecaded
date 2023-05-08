@@ -12,7 +12,7 @@ class Budget:
             database = self.config.mysql_db,
             port     = self.config.mysql_port
         )
-        self.conn.autocommit = True
+        self.conn.autocommit = False
     
     def get_budget_data(self):
          
@@ -48,7 +48,7 @@ class Budget:
         cursor.close()
 
     def update(self, data):
-
+        
         cursor = self.conn.cursor()
         query = 'update budget set \
                     name     = "{}",\
@@ -85,6 +85,7 @@ class Budget:
                 query = 'delete from budget where notion_id in {}'.format(tuple(ids_to_remove))
             cursor.execute(query)
             cursor.close()
+            self.conn.commit()
 
     def sync(self, data):
         try:
@@ -98,6 +99,9 @@ class Budget:
                     self.insert(item)
                 elif item['notion_id'] in current_data_ids:
                     self.update(item)
+            
+            self.conn.commit()
+
         except Exception as err:
             print(f'erro {str(err)}')
             pass
